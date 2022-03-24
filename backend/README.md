@@ -1,47 +1,28 @@
-<p align="center">
-  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo_text.svg" width="320" alt="Nest Logo" /></a>
-</p>
+# Backend модуль
 
-[circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
-[circleci-url]: https://circleci.com/gh/nestjs/nest
+## Как собрать Backend часть в Dockerfile
 
-## TradeOffer | Backend
+1) Образ для сборки - `node:14.16.1`
+2) Установка зависимостей: скопировать в рабочую директорию все файлы, начинающиеся со слова package и выполнить запуск команды
+`npm install`
+3) Обозначить порт 3001 как открытый
+4) Скопировать исходный код (добавить dockerignore файл) и выполнить сборку и запуск `npm run start`
 
-Сделано с использованием NestJS
+Если получится, попробуйте сделать запуск процессов не под root
 
-## Установка
-
-```bash
-$ npm install
-```
-
-## Настройка
-
-Нужно передать переменную среды `JWT_SECRET_TOKEN`. Удобно сделать это, создав файл `.env` и написав в него следующее:
+## Переменные окружения
 
 ```dotenv
-JWT_SECRET_TOKEN=your_secret_token_here
-```
+// URL до БД
+MYSQL_HOST=<вписать сюда DNS имя вашей БД, 
+в Compose оно совпадает с именем сервиса>
 
-Помимо этого рекомендуется настроить CORS. Для этого укажите регулярным выражением источники, с которых можно будет отправлять запросы на сайт
+// Токен для генерации токенов авторизации
+JWT_SECRET_TOKEN="your_secret_token_here"
 
-```dotenv
+// С какого сервера слушать запросы
 CORS_ORIGIN_REGEX="http([s])?:\/\/localhost:3002"
 ```
 
-Без указания данного параметра `Access-Control-Allow-Origin` будет равен `*`, т.е. сервер будет принимать запросы с любого источника
-
-При запуске через докер все эти настройки надо произвести в файлах его конфигурации, а не через `.env` файл
-
-## Запуск
-
-```bash
-# development
-$ npm run start
-
-# watch mode
-$ npm run start:dev
-
-# production mode
-$ npm run start:prod
-```
+Переменные окружения определить в Compose файле, кроме JWT SECRET TOKEN,
+ее лучше поместить в `.env` (потому что именно она будет переопределяться пользователем чаще всего)
